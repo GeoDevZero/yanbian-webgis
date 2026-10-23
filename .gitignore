@@ -1,0 +1,25 @@
+# 密钥文件：绝对不要提交到 GitHub
+.env
+
+# 从阿里云百炼下载的 apiKey CSV（里面就是明文密钥，绝不提交）
+*apiKey*.csv
+*apikey*.csv
+
+# Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+
+# 编辑器
+.vscode/
+
+# 备份文件（改代码前的手工备份，不属于作品内容）
+*.bak
+*.bak-*
+*.orig
+*~
+
+# 系统杂项
+.DS_Store
+Thumbs.db
+*.log

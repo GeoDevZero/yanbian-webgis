@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>我的第一张地图</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+
+  <link rel="stylesheet" href="style.css" />
+
+</head>
+
+<body>
+
+
+  <div id="app">
+
+    <!-- 左边：地图 -->
+    <div id="map"></div>
+
+    <!-- 右边：侧栏 -->
+    <aside id="sidebar">
+
+      <!-- ① 数据面板 -->
+      <section class="panel">
+        <h3>📊 数据面板</h3>
+        <p id="stat-summary">加载中…</p>
+        <ul id="county-list"></ul>
+      </section>
+
+      <!-- ② AI 对话 -->
+      <section class="panel">
+        <h3>💬 AI 对话</h3>
+        <div id="chat-log"></div>
+        <div class="chat-input-row">
+          <input id="chat-input" type="text" placeholder="问点什么…" />
+          <button id="chat-send">发送</button>
+        </div>
+      </section>
+
+      <!-- ③ 选中要素 -->
+      <section class="panel">
+        <h3>📍 选中要素</h3>
+        <div id="feature-info">在地图上点一个县试试</div>
+      </section>
+
+    </aside>
+
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+
+
+  <!-- <div id="map"></div> -->
+
+  <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script> -->
+
+</body>
+
+</html>
