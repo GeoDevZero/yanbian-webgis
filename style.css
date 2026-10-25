@@ -1,64 +1,303 @@
+/* ============================================================
+   延边州地理小助手 — 样式表
+   配色：深青（accent）用于按钮与「我问的」气泡；
+        地图的县域是红色边界，青红对比清楚，不会糊成一片。
+   ============================================================ */
+
+:root {
+  --bg: #f4f6f9;
+  --panel: #ffffff;
+  --line: #e5eaf0;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --accent: #0f766e;
+  --ai-bg: #f1f5f9;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 10px 24px -14px rgba(15, 23, 42, .22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
 html,
 body {
   margin: 0;
   height: 100%;
 }
 
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", "Source Han Sans SC", sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 整体布局：左地图 / 右侧栏 ---------- */
 #app {
   display: flex;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 #map {
-  flex: 1;
-  height: 100%;
+  flex: 1 1 auto;
+  min-width: 0;
+  background: #e9eff5;
+  /* ← 不给高度的话 Leaflet 会算成 0，地图是白的 */
 }
 
-/* ← height 不能少 */
 #sidebar {
-  width: 340px;
+  flex: 0 0 380px;
+  width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
   overflow-y: auto;
-  padding: 12px;
-  box-sizing: border-box;
+  background: var(--bg);
+  border-left: 1px solid var(--line);
 }
 
+/* ---------- 标题 ---------- */
+.brand {
+  padding: 2px 4px 0;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: .01em;
+}
+
+.brand p {
+  margin: 3px 0 0;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+.brand a {
+  color: var(--accent);
+  text-decoration: none;
+  margin-left: 6px;
+}
+
+.brand a:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 卡片 ---------- */
 .panel {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
 }
 
+.panel h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--muted);
+  letter-spacing: .03em;
+}
+
+.summary {
+  margin: 0;
+  font-size: 13px;
+  color: #374151;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------- 县市列表：两列小卡片 ---------- */
+#county-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+#county-list li {
+  padding: 5px 6px;
+  font-size: 12.5px;
+  text-align: center;
+  color: #374151;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+/* ---------- 对话 ---------- */
 #chat-log {
-  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 240px;
   overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .msg {
-  padding: 6px 8px;
-  border-radius: 6px;
-  margin: 4px 0;
+  max-width: 88%;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  white-space: pre-line;
+  /* ← 回答里有 \n，靠这个换行 */
+  word-break: break-word;
 }
 
 .msg.me {
-  background: #e8f0fe;
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
 }
 
 .msg.ai {
-  background: #f5f5f5;
+  align-self: flex-start;
+  background: var(--ai-bg);
+  color: #1f2937;
+  border-bottom-left-radius: 4px;
 }
 
+/* ---------- 输入区 ---------- */
 .chat-input-row {
   display: flex;
-  gap: 6px;
-  margin-top: 6px;
+  gap: 8px;
+  margin-top: 10px;
 }
 
 #chat-input {
   flex: 1;
+  min-width: 0;
+  padding: 9px 12px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text);
+  background: #fbfdff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .15s, box-shadow .15s, background .15s;
 }
 
+#chat-input::placeholder {
+  color: #9ca3af;
+}
+
+#chat-input:focus {
+  background: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, .12);
+}
+
+#chat-send {
+  padding: 9px 16px;
+  font: inherit;
+  font-size: 13px;
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: filter .15s, transform .05s;
+}
+
+#chat-send:hover {
+  filter: brightness(1.1);
+}
+
+#chat-send:active {
+  transform: translateY(1px);
+}
+
+/* ---------- 「清除标注」小按钮 ---------- */
+.ghost {
+  margin-left: auto;
+  padding: 3px 9px;
+  font: inherit;
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muted);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+
+.ghost:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* ---------- 选中要素 ---------- */
 #feature-info {
   white-space: pre-line;
   /* ← 保留换行符，但折叠多余空格 */
+  font-size: 13px;
+  color: #374151;
+  min-height: 22px;
+}
+
+/* ---------- 页脚 ---------- */
+.foot {
+  margin-top: auto;
+  padding: 4px 4px 8px;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+/* ---------- 滚动条 ---------- */
+#sidebar::-webkit-scrollbar,
+#chat-log::-webkit-scrollbar {
+  width: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb,
+#chat-log::-webkit-scrollbar-thumb {
+  background: #d5dce4;
+  border-radius: 8px;
+}
+
+#sidebar::-webkit-scrollbar-thumb:hover,
+#chat-log::-webkit-scrollbar-thumb:hover {
+  background: #c2cbd6;
+}
+
+/* ---------- 窄屏：上下堆叠 ---------- */
+@media (max-width: 860px) {
+  #app {
+    flex-direction: column;
+  }
+
+  #map {
+    flex: 0 0 46vh;
+    min-height: 240px;
+  }
+
+  #sidebar {
+    flex: 1 1 auto;
+    width: 100%;
+    padding: 12px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
 }

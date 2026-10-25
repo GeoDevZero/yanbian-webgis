@@ -181,4 +181,9 @@ document.getElementById('chat-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') sendChat();
 });
 
+// 「清除标注」：传一个空数组进去 = 清掉上一次画的圈和线
+document.getElementById('clear-actions').addEventListener('click', () => {
+  applyMapActions([]);
+});
+
 

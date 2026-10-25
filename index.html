@@ -3,17 +3,18 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>我的第一张地图</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>延边州地理小助手 · WebGIS + LLM Agent</title>
+  <meta name="description" content="基于 Leaflet 与 FastAPI 的延边州地图可视化小助手，支持点击县域查看介绍、用自然语言驱动地图绘图（距离/缓冲区）。" />
+
+  <link rel="icon"
+    href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗺️</text></svg>" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-
   <link rel="stylesheet" href="style.css" />
 
 </head>
 
 <body>
-
 
   <div id="app">
 
@@ -23,19 +24,31 @@
     <!-- 右边：侧栏 -->
     <aside id="sidebar">
 
+      <!-- 标题 -->
+      <header class="brand">
+        <h1>延边州地理小助手</h1>
+        <p>
+          Leaflet 地图 · FastAPI 接口 · 千问工具调用
+          <a href="https://github.com/GeoDevZero/yanbian-webgis" target="_blank" rel="noreferrer">源码</a>
+        </p>
+      </header>
+
       <!-- ① 数据面板 -->
       <section class="panel">
         <h3>📊 数据面板</h3>
-        <p id="stat-summary">加载中…</p>
+        <p id="stat-summary" class="summary">加载中…</p>
         <ul id="county-list"></ul>
       </section>
 
       <!-- ② AI 对话 -->
       <section class="panel">
-        <h3>💬 AI 对话</h3>
+        <h3>
+          💬 AI 对话
+          <button id="clear-actions" class="ghost" title="清空地图上画的圈和线">清除标注</button>
+        </h3>
         <div id="chat-log"></div>
         <div class="chat-input-row">
-          <input id="chat-input" type="text" placeholder="问点什么…" />
+          <input id="chat-input" type="text" placeholder="问点什么… 比如「以延吉为中心画30公里缓冲区」" />
           <button id="chat-send">发送</button>
         </div>
       </section>
@@ -43,20 +56,17 @@
       <!-- ③ 选中要素 -->
       <section class="panel">
         <h3>📍 选中要素</h3>
-        <div id="feature-info">在地图上点一个县试试</div>
+        <div id="feature-info"><span class="hint">在地图上点一个县试试</span></div>
       </section>
+
+      <footer class="foot">数据：延边朝鲜族自治州 8 个县市 · 底图：高德地图</footer>
 
     </aside>
 
   </div>
+
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js"></script>
-
-
-  <!-- <div id="map"></div> -->
-
-  <!-- <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="app.js"></script> -->
 
 </body>
 
