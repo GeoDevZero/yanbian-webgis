@@ -95,14 +95,6 @@ client = OpenAI(api_key=API_KEY, base_url="https://dashscope.aliyuncs.com/compat
 
 
 
-# @app.get("/api/chat")
-# def chat(q: str):
-#     resp = client.chat.completions.create(
-#         model="qwen-plus",
-#         messages=[{"role": "user", "content": q}],
-#     )
-#     return {"问题": q, "回答": resp.choices[0].message.content}
- 
 @app.get("/api/chat")
 def chat(q: str):
     """对外接口：出错时把错误原样返回，而不是丢一个光秃秃的 500。
@@ -365,7 +357,7 @@ SYSTEM_PROMPT = (
 # ========== 部署自检 ==========
 # 线上出现 500 时，打开 /api/diag 就能看到卡在哪一步：
 # 密钥有没有读到、模型接口连不连得上、每次调用要多久。
-@app.get("/api/diag")
+@app.get("/api/diag", include_in_schema=False)
 def diag():
     import platform
     import time
