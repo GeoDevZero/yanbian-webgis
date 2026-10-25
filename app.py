@@ -342,6 +342,9 @@ def diag():
         "python 版本": platform.python_version(),
         "密钥已注入": bool(key),
         "密钥前 6 位": (key[:6] + "…") if key else "",
+        "密钥长度": len(key),
+        "密钥后 4 位": key[-4:] if key else "",
+        "末尾是否有换行或空格": bool(key) and key != key.strip(),
         "模型地址": str(client.base_url),
     }
 
