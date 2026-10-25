@@ -72,6 +72,19 @@ client = OpenAI(api_key=API_KEY, base_url="https://dashscope.aliyuncs.com/compat
  
 @app.get("/api/chat")
 def chat(q: str):
+    """对外接口：出错时把错误原样返回，而不是丢一个光秃秃的 500。
+    线上排查时，浏览器里就能直接看到卡在哪一步。"""
+    try:
+        return _chat(q)
+    except Exception as e:
+        return {
+            "问题": q,
+            "回答": f"（后端错误）{type(e).__name__}: {str(e)[:300]}",
+            "地图动作": [],
+        }
+
+
+def _chat(q: str):
     messages = [
         {"role": "system", "content": SYSTEM_PROMPT},
         {"role": "user", "content": q},
@@ -314,3 +327,38 @@ SYSTEM_PROMPT = (
     "凡是涉及行车/驾车时间的问题，必须调用 estimate_drive_time 工具，不要自己估算。\n"
     "其他问题直接回答。回答简洁，用中文。"
 )
+
+
+# ========== 部署自检 ==========
+# 线上出现 500 时，打开 /api/diag 就能看到卡在哪一步：
+# 密钥有没有读到、模型接口连不连得上、每次调用要多久。
+@app.get("/api/diag")
+def diag():
+    import platform
+    import time
+
+    key = os.environ.get("DASHSCOPE_API_KEY") or ""
+    info = {
+        "python 版本": platform.python_version(),
+        "密钥已注入": bool(key),
+        "密钥前 6 位": (key[:6] + "…") if key else "",
+        "模型地址": str(client.base_url),
+    }
+
+    t0 = time.time()
+    try:
+        resp = client.chat.completions.create(
+            model="qwen-plus",
+            messages=[{"role": "user", "content": "只回一个字：好"}],
+            timeout=20,
+        )
+        info["模型调用"] = "成功"
+        info["耗时秒"] = round(time.time() - t0, 2)
+        info["模型回复"] = (resp.choices[0].message.content or "")[:50]
+    except Exception as e:
+        info["模型调用"] = "失败"
+        info["耗时秒"] = round(time.time() - t0, 2)
+        info["错误类型"] = type(e).__name__
+        info["错误信息"] = str(e)[:500]
+
+    return info
