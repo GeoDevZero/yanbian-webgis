@@ -7,6 +7,7 @@ from openai import OpenAI
 
 
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 
 # 用「本文件所在目录」拼绝对路径，不依赖启动时的工作目录（部署到云端必须这样写）
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -22,6 +23,38 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ========== 顺便把前端也服务了 ==========
+# 为什么需要这一段：
+# Vercel 把根目录的 app.py 认成了「整个项目的入口」，
+# 于是所有请求（包括 / 和 /app.js）都交给了这个 Python 应用，
+# 静态文件不会自动返回，所以 / 会 404。这里手动把 4 个文件交出去。
+#
+# 本地也有好处：直接开 http://localhost:8001 就能看到页面，省掉那个 8000 终端。
+# 用白名单而不是整目录挂载 —— 不把 app.py、notes、.env 这些暴露成网页。
+@app.get("/", include_in_schema=False)
+def page_index():
+    return FileResponse(os.path.join(BASE_DIR, "index.html"),
+                        media_type="text/html; charset=utf-8")
+
+
+@app.get("/app.js", include_in_schema=False)
+def page_js():
+    return FileResponse(os.path.join(BASE_DIR, "app.js"),
+                        media_type="text/javascript; charset=utf-8")
+
+
+@app.get("/style.css", include_in_schema=False)
+def page_css():
+    return FileResponse(os.path.join(BASE_DIR, "style.css"),
+                        media_type="text/css; charset=utf-8")
+
+
+@app.get("/yanbian.geojson", include_in_schema=False)
+def page_geojson():
+    return FileResponse(os.path.join(BASE_DIR, "yanbian.geojson"),
+                        media_type="application/geo+json; charset=utf-8")
 
 
 
