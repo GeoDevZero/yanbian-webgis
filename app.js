@@ -1,4 +1,12 @@
 
+// 0. 后端地址
+// 本地开发：前端在 8000、后端在 8001，必须写完整地址
+// 线上部署：Vercel 把 /api 开头的请求交给后端函数，同源，留空即可
+// 判断依据 = 「这个页面是从哪来的」
+const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  ? 'http://localhost:8001'
+  : '';
+
 // 1. 初始化地图
 // 建地图 
 const map = L.map('map').setView([42.90, 129.51], 9);
@@ -38,7 +46,7 @@ async function loadMap() {
           document.getElementById('feature-info').textContent = `你选中了：${name}`;
           try {
             const res = await fetch(
-              'http://localhost:8001/api/chat?q=' + encodeURIComponent(`用一句话介绍${name}`)
+              API_BASE + '/api/chat?q=' + encodeURIComponent(`用一句话介绍${name}`)
             );
             const data = await res.json();
             document.getElementById('feature-info').textContent =
@@ -65,7 +73,7 @@ loadMap();
 // 2.2 读取后端统计数据
 async function loadStats() {
   try {
-    const res = await fetch('http://localhost:8001/api/stats');
+    const res = await fetch(API_BASE + '/api/stats');
     const data = await res.json();
 
     // ① 显示总数
@@ -154,7 +162,7 @@ async function sendChat() {
 
   try {
     // 1) 拼出请求地址：注意要用 encodeURIComponent 包住 q！
-    const url = 'http://localhost:8001/api/chat?q=' + encodeURIComponent(q);
+    const url = API_BASE + '/api/chat?q=' + encodeURIComponent(q);
     const res = await fetch(url);
     const data = await res.json();
     // 4) 把 loading 替换成回答：
